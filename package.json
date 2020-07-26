@@ -1,0 +1,28 @@
+{
+  "name": "parser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "keywords": [
+    "parser",
+    "news"
+  ],
+  "author": "Oleh Zahrebelnyi",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "cheerio": "^1.0.0-rc.3",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-handlebars": "^5.1.0",
+    "moment": "^2.27.0",
+    "mysql": "^2.18.1",
+    "node-fetch": "^2.6.0",
+    "nodemon": "^2.0.4",
+    "request": "^2.88.2",
+    "unirest": "^0.6.0"
+  }
+}
