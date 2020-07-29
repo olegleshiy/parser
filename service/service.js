@@ -1,22 +1,50 @@
-const unirest = require("unirest");
-const download = require('./service/save.images');
+//const unirest = require("unirest");
+
+//const connection = require('./db');
+const cheerio = require("cheerio");
+const nodeFetch = require('node-fetch');
+const download = require('./save.images');
 const pathImgNews = 'uploads/news';
 const pathImgEntertainment = 'uploads/entertainment';
 
-const getPost = async (url, host) => {
+const getPost = async (url) => {
     try {
-        const response = await unirest.get(url)
-            .query({
-                "sortBy": "createdAt",
-                "category": "generalnews",
-                "region": "US"
+        const response = await nodeFetch(url);
+        const html = await response.text();
+        const $ = cheerio.load(html);
+        let arr = [];
+        await (() => {
+            $('.js-stream-content').each((i, el) => {
+                let img = $(el).find('img').attr('src');
+                let category = $(el).find('[data-test-locator="catlabel"]').text();
+                let title = $(el).find('[class="Mb(5px)"] a').text();
+                let link = $(el).find('h3 a').attr('href');
+                let description = $(el).find('p').text();
+
+                arr.push({
+                    img: img,
+                    title: title,
+                    link: link,
+                    category: category,
+                    description: description,
+                    date: Date.now(),
+                })
             })
-            .headers({
-                "x-rapidapi-host": host,
-                "x-rapidapi-key": process.env.X_RAPID_API_KEY,
-                "useQueryString": true
-            });
-        return await response.body.items.result;
+        })();
+
+        return arr;
+        // const response = await unirest.get(url)
+        //     .query({
+        //         "sortBy": "createdAt",
+        //         "category": "generalnews",
+        //         "region": "US"
+        //     })
+        //     .headers({
+        //         "x-rapidapi-host": host,
+        //         "x-rapidapi-key": process.env.X_RAPID_API_KEY,
+        //         "useQueryString": true
+        //     });
+        // return await response.body.items.result;
 
     } catch (err) {
         console.log(err)
@@ -25,30 +53,28 @@ const getPost = async (url, host) => {
 
 const getFinancePost = async () => {
     try {
-        const result = await getPost(process.env.URL_FINANCE_NEWS, process.env.X_RAPID_API_HOST_FINANCE);
+        const result = await getPost(process.env.URL_FINANCE_NEWS);
+        console.log("result", result);
+        //const data = connection.query('SELECT title FROM finance;');
+        //console.log("query", data);
 
-        for await (let item of result) {
-            let { main_image, published_at } = item;
-            if (main_image) {
-                await download(main_image.original_url, pathImgNews, published_at, (msg) => {
+        for (let item of result) {
+            let { img, date } = item;
+                await download(img, pathImgNews, date, (msg) => {
                     const post  = {
-                        uuid: item.uuid,
                         title: item.title,
-                        summary: item.summary,
-                        type: item.type,
                         link: item.link,
+                        category: item.category,
                         content: item.content,
-                        main_image: msg,
-                        publisher: item.publisher,
-                        published_at: item.published_at,
+                        image: item.img,
                     };
-                    const query = connection.query('INSERT INTO finance SET ?', post, function (error, results, fields) {
+                    const data = connection.query('INSERT INTO finance SET ?', post, function (error, results,
+                    fields) {
                         if (error) throw error;
 
                     });
                     console.log('✅ Done!', msg);
                 });
-            }
         }
 
     } catch (e) {
@@ -58,12 +84,12 @@ const getFinancePost = async () => {
 
 const getEntertainmentPost = async () => {
     try {
-        const result = await getPost(process.env.URL_ENTERTAINMENT_NEWS, process.env.X_RAPID_API_HOST_ENTERTAINMENT);
+        const result = await getPost(process.env.URL_ENTERTAINMENT_NEWS);
 
         for await (let item of result) {
-            let { main_image, published_at } = item;
-            if (main_image) {
-                await download(main_image.original_url, pathImgEntertainment, published_at, (msg) => {
+            let { image, date } = item;
+            if (image) {
+                await download(image, pathImgEntertainment, date, (msg) => {
                     console.log('✅ Done!', msg);
                 });
             }
@@ -73,4 +99,4 @@ const getEntertainmentPost = async () => {
     }
 }
 
-module.exports = getPost;
+module.exports = getFinancePost;

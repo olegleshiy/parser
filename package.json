@@ -2,9 +2,9 @@
   "name": "parser",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "parser.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon parser.js"
   },
   "keywords": [
     "parser",
