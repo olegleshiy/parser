@@ -7,11 +7,4 @@ const conn = mysql.createConnection({
     database : process.env.DB_NAME
 });
 
-// const pull = mysql.createPool({
-//     host     : process.env.DB_HOST,
-//     user     : process.env.DB_USER,
-//     password : process.env.DB_PASS,
-//     database : process.env.DB_NAME
-// });
-
 module.exports = conn;

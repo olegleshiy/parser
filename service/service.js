@@ -1,10 +1,5 @@
-//const unirest = require("unirest");
-//const conn = require('../parser');
 const cheerio = require("cheerio");
 const nodeFetch = require('node-fetch');
-const download = require('./save.images');
-const pathImgNews = 'uploads/news';
-const pathImgEntertainment = 'uploads/entertainment';
 
 const getPost = async (url) => {
     try {
@@ -41,9 +36,7 @@ const getPost = async (url) => {
 
 const getFinancePost = async () => {
     try {
-        const result = await getPost(process.env.URL_FINANCE_NEWS);
-        return await result;
-
+        return await getPost(process.env.URL_FINANCE_NEWS);
     } catch (e) {
         console.log(e);
     }
@@ -51,16 +44,7 @@ const getFinancePost = async () => {
 
 const getEntertainmentPost = async () => {
     try {
-        const result = await getPost(process.env.URL_ENTERTAINMENT_NEWS);
-        return await result;
-        // for await (let item of result) {
-        //     let { image, date } = item;
-        //     if (image) {
-        //         await download(image, pathImgEntertainment, date, (msg) => {
-        //             console.log('✅ Done!', msg);
-        //         });
-        //     }
-        // }
+        return  await getPost(process.env.URL_ENTERTAINMENT_NEWS);
     } catch (e) {
         console.log(e);
     }
