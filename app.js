@@ -5,7 +5,7 @@
 // const app = express();
 // dotenv.config();
 //
-// const connection = require('./service/db');
+// const conn = require('./service/db');
 // const PORT = process.env.PORT || 7000;
 //
 // //Instruments
@@ -28,7 +28,7 @@
 //
 // app.get('/news', async (req, res) => {
 //     try {
-//         const query = connection.query('SELECT * FROM finance ORDER BY published_at DESC', function (error, results, fields) {
+//         const query = conn.query('SELECT * FROM finance ORDER BY published_at DESC', function (error, results, fields) {
 //             if (error) throw error;
 //             res.render('news', { articles: results });
 //         });
@@ -40,7 +40,7 @@
 //
 // app.get('/entertainment', async (req, res) => {
 //     try {
-//         const query = connection.query('SELECT * FROM finance ORDER BY published_at DESC', function (error, results, fields) {
+//         const query = conn.query('SELECT * FROM finance ORDER BY published_at DESC', function (error, results, fields) {
 //             if (error) throw error;
 //             res.render('entertainment', { articles: results });
 //         });
@@ -50,13 +50,13 @@
 //     }
 // });
 //
-// connection.connect((err) => {
+// conn.connect((err) => {
 //     if (err) {
 //         console.error(`Error connecting: ${ err.stack }`);
 //         return;
 //     }
 //
-//     console.log(`Connected DB as id ${ connection.threadId }`);
+//     console.log(`Connected DB as id ${ conn.threadId }`);
 //     app.listen(PORT, () => {
 //         console.log(`Server running to port ${ PORT }`);
 //     });
