@@ -1,11 +1,32 @@
 const cheerio = require("cheerio");
 const nodeFetch = require('node-fetch');
+const https = require('https');
 const download = require('./save.images');
 const pathImgNews = 'uploads/news';
 const pathImgEntertainment = 'uploads/entertainment';
 
 const getPost = async (url) => {
     try {
+        //let response = '';
+        // https.get(url,(res) => {
+        //     console.log('statusCode:', res.statusCode);
+        //     console.log('headers:', res.headers);
+        //
+        //     //res.setEncoding('utf8');
+        //     let rawData = '';
+        //     res.on('data', (chunk) => { rawData += chunk; });
+        //     res.on('end', () => {
+        //         try {
+        //             const parsedData = JSON.parse(rawData);
+        //             console.log(parsedData);
+        //         } catch (e) {
+        //             console.error(e.message);
+        //         }
+        //     });
+        //
+        // }).on('error', (e) => {
+        //     console.error(e);
+        // });
         const response = await nodeFetch(url);
         const html = await response.text();
 
@@ -67,24 +88,24 @@ const getEntertainmentPost = async (conn) => {
     try {
         const result = await getPost(process.env.URL_ENTERTAINMENT_NEWS);
 
-        for await (let item of result) {
-            let { img, date } = item;
-            await download(img, pathImgEntertainment, date, (msg) => {
-                const post  = {
-                    title: item.title,
-                    link: item.link,
-                    category: item.category,
-                    description: item.description,
-                    image: msg,
-                };
-                const query = 'INSERT INTO entertainment SET ?';
-                conn.query(query, post, function (error, results, fields) {
-                    if (error) throw error;
-
-                });
-                console.log('✅ Done!', msg);
-            });
-        }
+        // for await (let item of result) {
+        //     let { img, date } = item;
+        //     await download(img, pathImgEntertainment, date, (msg) => {
+        //         const post  = {
+        //             title: item.title,
+        //             link: item.link,
+        //             category: item.category,
+        //             description: item.description,
+        //             image: msg,
+        //         };
+        //         const query = 'INSERT INTO entertainment SET ?';
+        //         conn.query(query, post, function (error, results, fields) {
+        //             if (error) throw error;
+        //
+        //         });
+        //         console.log('✅ Done!', msg);
+        //     });
+        // }
     } catch (e) {
         console.log(e);
     }

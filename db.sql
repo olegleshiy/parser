@@ -5,6 +5,7 @@ CREATE TABLE finance (
     category VARCHAR(300),
     description MEDIUMTEXT,
     image VARCHAR(300),
+    date_publish VARCHAR(150),
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )
 
@@ -15,5 +16,6 @@ CREATE TABLE entertainment (
     category VARCHAR(300),
     description MEDIUMTEXT,
     image VARCHAR(300),
+    date_publish VARCHAR(150),
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )

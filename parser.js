@@ -60,7 +60,7 @@ app.get('/entertainment', async (req, res) => {
 
 const task = cron.schedule('*/2 * * * *', async () => {
     await getFinancePost(conn);
-    await getEntertainmentPost(conn);
+    //await getEntertainmentPost(conn);
 });
 
 conn.connect(err => {
