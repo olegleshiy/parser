@@ -1,6 +1,5 @@
 const cheerio = require("cheerio");
 const nodeFetch = require('node-fetch');
-const https = require('https');
 const fs = require('fs');
 const download = require('./save.images');
 const pathImgNews = 'uploads/news';
