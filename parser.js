@@ -21,7 +21,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.get('/', async (req, res) => {
     try {
-        const result = await getFinancePost();
+        const result = await getFinancePost(conn);
         res.sendStatus(200)
     } catch (e) {
         console.log(e);
@@ -30,32 +30,17 @@ app.get('/', async (req, res) => {
 
 app.get('/news', async (req, res) => {
     try {
-        const result = await getFinancePost();
-        const query = 'SELECT title FROM finance;';
-        conn.query(query, function (error, data, fields) {
-            if (error) throw error;
+        const result = await getFinancePost(conn);
 
-            console.log('RESULTS', data);
-        });
+        // const query = 'SELECT title FROM finance;';
+        // conn.query(query, function (error, data, fields) {
+        //     if (error) throw error;
+        //
+        //     console.log('RESULTS', data);
+        // });
+        const sss = result.sort((a, b) => a.date > b.date ? -1 : 1);
 
-        // for await (let item of result) {
-        //     let { img, date } = item;
-        //     await download(img, pathImgNews, date, (msg) => {
-        //         const post  = {
-        //             title: item.title,
-        //             link: item.link,
-        //             category: item.category,
-        //             description: item.description,
-        //             image: msg,
-        //         };
-        //         const query = 'INSERT INTO finance SET ?';
-        //         conn.query(query, post, function (error, results, fields) {
-        //             if (error) throw error;
-        //         });
-        //         console.log('✅ Done!', msg);
-        //     });
-        // }
-        res.send({result})
+        res.send(sss)
         //res.sendStatus(200);
 
     } catch (e) {
@@ -65,24 +50,8 @@ app.get('/news', async (req, res) => {
 
 app.get('/entertainment', async (req, res) => {
     try {
-        const result = await getEntertainmentPost();
-        // for await (let item of result) {
-        //     let { img, date } = item;
-        //     await download(img, pathImgEntertainment, date, (msg) => {
-        //         const post  = {
-        //             title: item.title,
-        //             link: item.link,
-        //             category: item.category,
-        //             description: item.description,
-        //             image: msg,
-        //         };
-        //         const query = 'INSERT INTO entertainment SET ?';
-        //         conn.query(query, post, function (error, results, fields) {
-        //             if (error) throw error;
-        //         });
-        //         console.log('✅ Done!', msg);
-        //     });
-        // }
+        const result = await getEntertainmentPost(conn);
+
         res.send({result})
     } catch (e) {
         console.log(e);
