@@ -1,19 +1,12 @@
-CREATE TABLE finance (
+CREATE TABLE posts (
     id INT(6) AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(350) NOT NULL,
     link VARCHAR(350) NOT NULL,
-    category VARCHAR(300),
+    source_link VARCHAR(350),
+    source_name VARCHAR(350),
     description MEDIUMTEXT,
+    resource VARCHAR(150) NOT NULL,
     image VARCHAR(300),
-    reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-)
-
-CREATE TABLE entertainment (
-    id INT(6) AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(350) NOT NULL,
-    link VARCHAR(350) NOT NULL,
-    category VARCHAR(300),
-    description MEDIUMTEXT,
-    image VARCHAR(300),
+    publish_date DATETIME,
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )

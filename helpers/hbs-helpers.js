@@ -7,7 +7,7 @@ module.exports = {
         }
         return options.inverse(this);
     },
-    getTime(timeStamp) { return moment(timeStamp * 1000).format('DD-MMM-YYYY') },
-    getTimeAll(timeStamp) { return moment(timeStamp * 1000).format('DD-MMM-YYYY, HH:mm:ss') },
+    getTime(timeStamp) { return moment(timeStamp).format('DD-MMM-YYYY') },
+    getTimeAll(timeStamp) { return moment(timeStamp).format('DD-MMM-YYYY, HH:mm:ss') },
     getDescription(string) { return string.substring(0, 350) + '...' }
 };

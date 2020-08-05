@@ -3,18 +3,18 @@
     {{#each articles}}
         <article class="card">
             <div class="card__items-container">
-                <p class="card__data--created">{{getTimeAll published_at}}</p>
+                <p class="card__data--created">{{getTimeAll publish_date}}</p>
                 <div class="card__block">
                     <div class='card__block--left'>
                         <a href='{{link}}' rel='noreferrer noopener'>
-                            <img class="card__img-block" src='/{{main_image}}'>
+                            <img class="card__img-block" src='/{{image}}'>
                         </a>
                     </div>
                     <div class='card__block--right'>
                         <a href='{{link}}' rel='noreferrer noopener'>
                             <h5 class="card__title">{{title}}</h5>
                         </a>
-                        <p class="card__description">{{getDescription summary}}</p>
+                        <p class="card__description">{{{description}}}</p>
                         <a class="card__read-more" href='{{link}}' rel='noreferrer noopener'>Read more</a>
                     </div>
                 </div>
