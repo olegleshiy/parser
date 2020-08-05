@@ -21,7 +21,25 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.get('/', async (req, res) => {
     try {
-        const result = await getFinancePost(conn);
+        //const result = await getFinancePost(conn);
+        https.get('https://finance.yahoo.com/rss/', (res) => {
+            console.log('statusCode:', res.statusCode);
+            console.log('headers:', res.headers);
+            let data = '';
+            res.on('data', (d) => {
+                data += d;
+            });
+            res.on('end', () => {
+                fs.writeFile('index.xml', data, (err) => {
+                    if (err) throw err;
+                    console.log('The file has been saved!');
+                });
+            });
+
+        }).on('error', (e) => {
+            console.error(e);
+        });
+
         res.sendStatus(200)
     } catch (e) {
         console.log(e);
@@ -38,10 +56,10 @@ app.get('/news', async (req, res) => {
         //
         //     console.log('RESULTS', data);
         // });
-        const sss = result.sort((a, b) => a.date > b.date ? -1 : 1);
+        //const sss = result.sort((a, b) => a.date > b.date ? -1 : 1);
 
-        res.send(sss)
-        //res.sendStatus(200);
+        //res.send(sss)
+        res.send(result);
 
     } catch (e) {
         console.log(e);
@@ -52,7 +70,16 @@ app.get('/entertainment', async (req, res) => {
     try {
         const result = await getEntertainmentPost(conn);
 
-        res.send({result})
+        // const query = 'SELECT title FROM entertainment;';
+        // conn.query(query, function (error, data, fields) {
+        //     if (error) throw error;
+        //
+        //     console.log('RESULTS', data);
+        // });
+
+        //const sss = result.sort((a, b) => a.date > b.date ? -1 : 1);
+
+        res.send(result)
     } catch (e) {
         console.log(e);
     }

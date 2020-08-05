@@ -7,68 +7,27 @@ const pathImgEntertainment = 'uploads/entertainment';
 const moment = require('moment');
 
 const xml2js = require('xml2js');
-const parser = new xml2js.Parser({ attrkey: "ATTR", keepArray: true, trim: true });
+const parser = new xml2js.Parser({ attrkey: "ATTR" });
 
 const getPost = async (url) => {
     try {
         const response = await nodeFetch(url);
-        const xml = await response.text();
-        //const result = await (() => {
-            //const $ = cheerio.load(html);
-            //let arr = [];
-            //$('item').each((i, el) => {
-                // let img = $(el).find('img').attr('src');
-                // let category = $(el).find('[data-test-locator="catlabel"]').text();
-                // let title = $(el).find('[class="Mb(5px)"] a').text() ? $(el).find('[class="Mb(5px)"] a').text() : $(el).find('h2').text();
-                // let link = $(el).find('h3 a').attr('href') ? $(el).find('h3 a').attr('href') : $(el).find('a').attr('href');
-                // let description = $(el).find('p').text();
-                //
-                // arr.push({
-                //     img: img,
-                //     title: title,
-                //     link: link,
-                //     category: category,
-                //     description: description,
-                //     date: Date.now()
-                // })
-                //let img = $(el).find('img').attr('src');
-                //let category = $(el).find('[data-test-locator="catlabel"]').text();
-                // let title = $(el).find('title').text();
-                // let link = $(el).find('link').text();
-                // let description = $(el).find('description').text();
-                // let date = $(el).find('pubDate').text();
-
-                // arr.push({
-                //     img: img,
-                //     title: title,
-                //     link: link,
-                //     category: category,
-                //     description: description,
-                //     date: Date.now()
-                // })
-            //})
-
-            //return arr;
-        //})();
-        //return await result;
+        const html = await response.text();
         let file = [];
 
-        parser.parseString(xml, function(error, result) {
+        parser.parseString(html, function(error, result) {
             if(error === null) {
                 result.rss.channel[0].item.forEach(el => {
                     file.push({
-                        //img: xml.querySelector("media:content"),
+                        img: el['media:content'] && el['media:content'][0] && el['media:content'][0].ATTR.url,
                         title: el.title[0],
                         link: el.link[0],
-                        //category: category,
                         source: el.source[0].ATTR.url,
                         sourceName: el.source[0]._,
                         description: el.description,
                         date: moment(el.pubDate[0]).format('DD-MMM-YYYY, HH:mm:ss')
                     })
                 })
-                //file = result.rss.channel[0].item;
-                //console.log(result);
             }
             else {
                 console.log(error);
