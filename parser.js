@@ -59,7 +59,7 @@ app.get('/news', async (req, res) => {
 
 app.get('/entertainment', async (req, res) => {
     try {
-        const query = 'SELECT * FROM posts WHERE resource = "entertainment" ORDER BY publish_date DESC LIMIT 10;';
+        const query = 'SELECT * FROM posts WHERE resource = "entertainment" ORDER BY publish_date ASC LIMIT 10;';
         conn.query(query, function (error, data, fields) {
             if (error) throw error;
 
@@ -74,7 +74,7 @@ app.get('/entertainment', async (req, res) => {
     }
 });
 
-const task = cron.schedule('*/5 * * * *', async () =>  {
+const task = cron.schedule('*/2 * * * *', async () =>  {
     try {
         console.log('Get new posts');
         await getAllPosts(conn, process.env.URL_FINANCE_NEWS, 'news');
