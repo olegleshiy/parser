@@ -27,13 +27,13 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.get('/', async (req, res) => {
     try {
-        const query = "SELECT publish_date FROM posts WHERE resource = 'news' ORDER BY publish_date ASC LIMIT 1;";
-        conn.query(query, function (error, data, fields) {
-            if (error) throw error;
-
-            console.log('newPost2', data);
-            res.send(`<h1>${data[0].publish_date}</h1>`)
-        });
+        // const query = "SELECT publish_date FROM posts WHERE resource = 'news' ORDER BY publish_date ASC LIMIT 1;";
+        // conn.query(query, function (error, data, fields) {
+        //     if (error) throw error;
+        //
+        //     console.log('newPost2', data);
+        //     res.send(`<h1>${data[0].publish_date}</h1>`)
+        // });
 
     } catch (e) {
         console.log(e);
