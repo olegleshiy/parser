@@ -92,7 +92,7 @@ conn.connect(err => {
         return;
     }
 
-    console.log(`Connected DB as id ${ conn.threadId }`);
+    console.log(`Connected DB as id ${ conn.processID }`);
     app.listen(PORT, () => {
         console.log(`Server running to port ${ PORT }`);
         task.stop();

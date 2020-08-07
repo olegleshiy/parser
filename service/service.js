@@ -49,75 +49,86 @@ const getAllPosts = async (conn, resourceLink, resource) => {
         const query = `SELECT publish_date FROM posts WHERE resource = '${resource}' ORDER BY publish_date ASC LIMIT 1;`;
 
         if (result) {
-            conn.query(query, async (error, data, fields) => {
-                if (error) throw error;
-                console.log('DDD', data);
-                let newPost = result.filter(
-                        post => {
-                            moment(post.publish_date).format('x') > moment(data.publish_date).format('x');
-                            //console.log('newPost', moment(post.publish_date).format('x'),
-                            // moment(data.publish_date).format('x'), moment(post.publish_date).format('x') > moment(data.publish_date).format('x'));
-                        }
-                    );
-                console.log('newPost', newPost);
+            const data = await conn.query(query);
 
-                for await (let item of data ? newPost : result) {
+            let newPost = await result.filter(post => {
+                moment(post.publish_date).format('x') >
+                    moment(data.publish_date).format('x');
+            });
+            console.log('NEWPOST', newPost);
 
-                    let { image, publish_date, description } = item;
-                    let pathImg =
-                        resource === 'news'
-                            ? pathImgNews
-                            : pathImgEntertainment;
-                    let dateForImage = moment(publish_date).format(
-                        'YYYY-MM-DD'
-                    );
+            for await (let item of data.publish_date ? newPost : result) {
+                let { image, publish_date, description } = item;
+                let pathImg =
+                    resource === 'news' ? pathImgNews : pathImgEntertainment;
+                let dateForImage = moment(publish_date).format('YYYY-MM-DD');
 
-                    if (image) {
-                        await download(image, pathImg, dateForImage, msg => {
-                            const post = {
-                                title: item.title,
-                                link: item.link,
-                                source_link: item.source_link,
-                                source_name: item.source_name,
-                                description: item.description.replace(
-                                    /<[^>]*>?/gm,
-                                    ''
-                                ),
-                                resource: resource,
-                                image: msg,
-                                publish_date: moment(publish_date).format('YYYY-MM-DD hh:mm:ss'),
-                            };
-                            const query = 'INSERT INTO posts SET ?';
-                            conn.query(query, post, (
-                                error,
-                                results,
-                                fields
-                            ) => {
-                                if (error) throw error;
-                            });
-                            console.log('✅ Done!', msg);
-                        });
-                    } else if (description) {
+                if (image) {
+                    await download(image, pathImg, dateForImage, async msg => {
                         const post = {
                             title: item.title,
                             link: item.link,
                             source_link: item.source_link,
                             source_name: item.source_name,
-                            description: item.description,
+                            description: item.description.replace(
+                                /<[^>]*>?/gm,
+                                ''
+                            ),
                             resource: resource,
-                            publish_date: moment(publish_date).format('YYYY-MM-DD hh:mm:ss'),
+                            image: msg,
+                            publish_date: moment(publish_date).format(
+                                'YYYY-MM-DD hh:mm:ss'
+                            ),
                         };
-                        const query = 'INSERT INTO posts SET ?';
-                        conn.query(query, post, (
-                            error,
-                            results,
-                            fields
-                        ) => {
-                            if (error) throw error;
-                        });
-                    }
+                        const query =
+                            'INSERT INTO posts(title, link, source_link, source_name, description,' +
+                            ' resource, image, publish_date) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *';
+                        const values = [
+                            `${post.title}`,
+                            `${post.link}`,
+                            `${post.source_link}`,
+                            `${post.source_name}`,
+                            `${post.description}`,
+                            `${post.resource}`,
+                            `${post.image}`,
+                            `${post.publish_date}`,
+                        ];
+                        const result = await conn.query(query, values);
+                        console.log('RESULT', result);
+                        console.log('✅ Done!', msg);
+                    });
+                } else if (description) {
+                    const post = {
+                        title: item.title,
+                        link: item.link,
+                        source_link: item.source_link,
+                        source_name: item.source_name,
+                        description: item.description,
+                        resource: resource,
+                        publish_date: moment(publish_date).format(
+                            'YYYY-MM-DD hh:mm:ss'
+                        ),
+                    };
+                    const query =
+                        'INSERT INTO posts(title, link, source_link, source_name, description,' +
+                        ' resource, image, publish_date) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *';
+                    const values = [
+                        `${post.title}`,
+                        `${post.link}`,
+                        `${post.source_link}`,
+                        `${post.source_name}`,
+                        `${post.description}`,
+                        `${post.resource}`,
+                        `${post.publish_date}`,
+                    ];
+                    const result = await conn.query(query, values);
+                    console.log('RESULT2', result);
+                    // const query = 'INSERT INTO posts SET ?';
+                    // conn.query(query, post, (error, results, fields) => {
+                    //     if (error) throw error;
+                    // });
                 }
-            });
+            }
         }
     } catch (e) {
         console.log(e);
