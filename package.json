@@ -4,10 +4,10 @@
   "description": "",
   "main": "parser.js",
   "lint-staged": {
-    "service/**/*.{js,ts,json,css,scss,md}": [
+    "service/*.{js,ts,json,css,scss,md}": [
       "prettier --write"
     ],
-    "public/**/*.{js,ts,json,css,scss,md}": [
+    "public/*.{js,css,scss}": [
       "prettier --write"
     ]
   },
